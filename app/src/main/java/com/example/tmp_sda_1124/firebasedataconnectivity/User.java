@@ -5,9 +5,11 @@ package com.example.tmp_sda_1124.firebasedataconnectivity;
  */
 
 public class User {
-    String userId;
-    String userName;
-    String userpassword;
+   private String userId;
+    private String userName;
+    private String userpassword;
+   private long HighScore;
+    private int Score;
 
 
     public User()
@@ -19,6 +21,8 @@ public class User {
         this.userId=userId;
         this.userName = userName;
         this.userpassword = userpassword;
+        this.HighScore=0;
+        this.Score=0;
     }
 
     public String getUserName() {
@@ -31,5 +35,13 @@ public class User {
 
     public String getUserId() {
         return userId;
+    }
+
+    public long getHighScore() {
+        return HighScore;
+    }
+
+    public int getScore() {
+        return Score;
     }
 }
