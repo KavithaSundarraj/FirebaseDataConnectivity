@@ -12,12 +12,18 @@ public class User {
     private int Score;
 
 
-    public User()
-    {
-
+    public User(){
     }
 
-    public User(String userId,String userName, String userpassword) {
+    public User(String userId, String userName, String userpassword, long highScore, int score) {
+        this.userId = userId;
+        this.userName = userName;
+        this.userpassword = userpassword;
+        HighScore = highScore;
+        Score = score;
+    }
+
+    public User(String userId, String userName, String userpassword) {
         this.userId=userId;
         this.userName = userName;
         this.userpassword = userpassword;

@@ -8,8 +8,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private Button newUserButton;
     private Button loginButton;
 
+    private ArrayList<User> users;
+    private User validUser;
     DatabaseReference databaseUser;
 
     @Override
@@ -25,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        users=new ArrayList<>();
 
         databaseUser= FirebaseDatabase.getInstance().getReference("users");
 
@@ -50,8 +59,49 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        databaseUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                users.clear();
+                for(DataSnapshot userSnapshot: dataSnapshot.getChildren())
+                {
+                    User user=userSnapshot.getValue(User.class);
+                    users.add(user);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void validateUser()
     {
+        String namevalue=userEditText.getText().toString().trim();
+        String passvalue=passwordEditText.getText().toString().trim();
+        boolean found=false;
+
+        for(User u:users)
+        {
+            if(u.getUserName().equals(namevalue) && u.getUserpassword().equals(passvalue )) {
+                validUser = new User(u.getUserId(), u.getUserName(), u.getUserpassword(), u.getHighScore(), u.getScore());
+                found = true;
+            }
+        }
+        if(found)
+        {
+            Toast.makeText(this,"Valid User",Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            Toast.makeText(this,"InValid User.Please register",Toast.LENGTH_LONG).show();
+        }
 
     }
     private void addUser()
